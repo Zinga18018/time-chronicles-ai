@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Time Chronicles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-brand">
+                <i class="fas fa-clock"></i>
+                Time Chronicles
+            </a>
+            <div class="nav-menu">
+                <a href="{{ url_for('index') }}" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+                <h1>{{ user.username }}</h1>
+                <p>{{ user.email }}</p>
+                <p class="join-date">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+            </div>
+        </div>
+        
+        <div class="profile-tabs">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="stories">My Stories</button>
+            <button class="tab-btn" data-tab="achievements">Achievements</button>
+            <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-book"></i>
+                    <h3 id="totalStories">0</h3>
+                    <p>Stories Written</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-bookmark"></i>
+                    <h3 id="totalBookmarks">0</h3>
+                    <p>Stories Bookmarked</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <h3 id="totalRatings">0</h3>
+                    <p>Ratings Given</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3 id="totalAchievements">0</h3>
+                    <p>Achievements</p>
+                </div>
+            </div>
+            
+            <div class="dashboard-sections">
+                <div class="section">
+                    <h3>Era Preferences</h3>
+                    <div id="eraChart" class="chart-container">
+                        <p class="no-data">No stories written yet</p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>Recent Stories</h3>
+                    <div id="recentStories" class="recent-stories">
+                        <p class="no-data">No stories written yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stories Tab -->
+        <div id="stories" class="tab-content">
+            <div class="stories-header">
+                <h3>My Stories</h3>
+                <div class="stories-filters">
+                    <select id="eraFilter">
+                        <option value="">All Eras</option>
+                        <option value="The Roaring Twenties">The Roaring Twenties</option>
+                        <option value="The Great Depression">The Great Depression</option>
+                        <option value="The Space Race">The Space Race</option>
+                        <option value="The 1960s Counter-culture">The 1960s Counter-culture</option>
+                        <option value="The Dawn of the Internet">The Dawn of the Internet</option>
+                        <option value="World War II Home Front">World War II Home Front</option>
+                        <option value="The Renaissance">The Renaissance</option>
+                        <option value="The Industrial Revolution">The Industrial Revolution</option>
+                    </select>
+                    <select id="sortFilter">
+                        <option value="created_at">Newest First</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="popularity">Most Popular</option>
+                    </select>
+                </div>
+            </div>
+            <div id="userStories" class="stories-grid">
+                <p class="loading">Loading stories...</p>
+            </div>
+        </div>
+        
+        <!-- Achievements Tab -->
+        <div id="achievements" class="tab-content">
+            <h3>Achievements</h3>
+            <div id="achievementsList" class="achievements-grid">
+                <p class="loading">Loading achievements...</p>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="settings-sections">
+                <div class="settings-section">
+                    <h3>Preferences</h3>
+                    <form id="preferencesForm">
+                        <div class="form-group">
+                            <label for="theme">Theme</label>
+                            <select id="theme" name="theme">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                                <option value="auto">Auto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="typewriter_speed">Typewriter Speed</label>
+                            <select id="typewriter_speed" name="typewriter_speed">
+                                <option value="slow">Slow</option>
+                                <option value="medium">Medium</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto_play_audio" name="auto_play_audio">
+                                <span class="checkmark"></span>
+                                Auto-play ambient audio
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn primary">Save Preferences</button>
+                    </form>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Change Password</h3>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="current_password">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="new_password">New Password</label>
+                            <input type="password" id="new_password" name="new_password" required minlength="8">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm_new_password">Confirm New Password</label>
+                            <input type="password" id="confirm_new_password" name="confirm_new_password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn secondary">Change Password</button>
+                    </form>
+                </div>
+                
+                <div class="settings-section danger-zone">
+                    <h3>Danger Zone</h3>
+                    <p>Once you delete your account, there is no going back. Please be certain.</p>
+                    <button id="deleteAccountBtn" class="btn danger">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    
+    <!-- Delete Account Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="delete_password">Enter your password to confirm:</label>
+                    <input type="password" id="delete_password" name="password" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="submit" class="btn danger">Delete Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='profile.js') }}"></script>
+    
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 80px;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-avatar i {
+            font-size: 4rem;
+            color: #d4af37;
+        }
+        
+        .profile-info h1 {
+            color: #d4af37;
+            margin-bottom: 5px;
+        }
+        
+        .profile-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+        
+        .join-date {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .profile-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            color: #d4af37;
+            border-bottom-color: #d4af37;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        
+        .no-data, .loading {
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stories-filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .stories-filters select {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .story-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .achievement-card.earned {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .settings-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .settings-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .danger-zone {
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            background: rgba(231, 76, 60, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn.primary {
+            background: #d4af37;
+            color: #1a1a2e;
+        }
+        
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn.danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #27ae60;
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stories-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</body>
+</html>

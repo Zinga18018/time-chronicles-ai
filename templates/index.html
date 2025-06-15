@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes of Time - Journey Through History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-hourglass-half"></i>
+                <span>Echoes of Time</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Journey</a>
+                <a href="#" class="nav-link">About</a>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="title-main">Echoes of Time</span>
+                    <span class="title-sub">Journey Through History</span>
+                </h1>
+                <p class="hero-description">
+                    Step into the shoes of those who shaped history. Experience their hopes, fears, and dreams through 
+                    intimate diary entries and vivid imagery that bridge the gap between past and present.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Historical Eras</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Stories to Discover</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Era Selection -->
+            <section class="era-selection">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    Choose Your Historical Journey
+                </h2>
+                
+                <div class="era-grid">
+                    <div class="era-card" data-era="The Roaring Twenties">
+                        <div class="era-icon">🎷</div>
+                        <h3>The Roaring Twenties</h3>
+                        <p>Jazz, flappers, and the spirit of rebellion</p>
+                        <div class="era-year">1920s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The Great Depression">
+                        <div class="era-icon">🏭</div>
+                        <h3>The Great Depression</h3>
+                        <p>Struggle, hope, and human resilience</p>
+                        <div class="era-year">1930s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The Space Race">
+                        <div class="era-icon">🚀</div>
+                        <h3>The Space Race</h3>
+                        <p>Reaching for the stars and beyond</p>
+                        <div class="era-year">1960s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The 1960s Counter-culture">
+                        <div class="era-icon">✌️</div>
+                        <h3>Counter-culture Movement</h3>
+                        <p>Peace, love, and social revolution</p>
+                        <div class="era-year">1960s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The Dawn of the Internet">
+                        <div class="era-icon">💻</div>
+                        <h3>Dawn of the Internet</h3>
+                        <p>Connecting the world digitally</p>
+                        <div class="era-year">1990s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="World War II Home Front">
+                        <div class="era-icon">🏭</div>
+                        <h3>WWII Home Front</h3>
+                        <p>Courage and sacrifice on the home front</p>
+                        <div class="era-year">1940s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The Renaissance">
+                        <div class="era-icon">🎨</div>
+                        <h3>The Renaissance</h3>
+                        <p>Art, innovation, and rebirth</p>
+                        <div class="era-year">1400s-1600s</div>
+                    </div>
+                    
+                    <div class="era-card" data-era="The Industrial Revolution">
+                        <div class="era-icon">⚙️</div>
+                        <h3>Industrial Revolution</h3>
+                        <p>Steam, steel, and transformation</p>
+                        <div class="era-year">1800s</div>
+                    </div>
+                </div>
+                
+                <div class="generate-section">
+                    <button id="generate-story" class="generate-btn" disabled>
+                        <i class="fas fa-magic"></i>
+                        <span>Hear Their Story</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Story Display -->
+            <section id="story-section" class="story-section hidden">
+                <div id="storyContainer" class="story-container">
+                    <!-- Enhanced Character Profile Card -->
+                    <div class="character-profile-card">
+                        <div class="profile-header">
+                            <div class="character-avatar">
+                                <i class="fas fa-user-circle"></i>
+                                <div class="avatar-glow"></div>
+                            </div>
+                            <div class="character-basic-info">
+                                <h3 id="character-name">Character Name</h3>
+                                <p id="character-era">Historical Era</p>
+                                <div class="character-mood">
+                                    <span id="mood-indicator"></span>
+                                    <span id="character-mood-text">Mood</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Character Profile Section -->
+                        <div id="character-profile-section" class="profile-section hidden">
+                            <div class="section-header">
+                                <i class="fas fa-user-tag"></i>
+                                <h4>Character Profile</h4>
+                                <button class="expand-btn" data-target="character-profile">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="character-profile-content" class="profile-content">
+                                <div class="content-wrapper">
+                                    <p id="character-profile-text">Loading character details...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Historical Context Section -->
+                        <div id="historical-context-section" class="profile-section hidden">
+                            <div class="section-header">
+                                <i class="fas fa-landmark"></i>
+                                <h4>Historical Context</h4>
+                                <button class="expand-btn" data-target="historical-context">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div id="historical-context-content" class="profile-content">
+                                <div class="content-wrapper">
+                                    <div id="historical-context-text">Loading historical context...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historical Image -->
+                    <div id="historical-image" class="historical-image hidden">
+                        <img id="era-image" src="" alt="Historical scene">
+                        <div class="image-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>Historical Recreation</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Diary Entry -->
+                    <div class="diary-container">
+                        <div class="diary-header">
+                            <i class="fas fa-book-open"></i>
+                            <span>Personal Diary Entry</span>
+                            <div class="diary-date" id="diary-date"></div>
+                        </div>
+                        <div id="diary-content" class="diary-content">
+                            <div class="loading-state">
+                                <div class="loading-spinner"></div>
+                                <p>Connecting to the past...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="story-actions">
+                        <button class="action-btn secondary" id="new-story-btn">
+                            <i class="fas fa-redo"></i>
+                            New Story
+                        </button>
+                        <button class="action-btn primary" id="share-story-btn">
+                            <i class="fas fa-share"></i>
+                            Share Story
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
